@@ -29,6 +29,8 @@ import resources_rc
 from idecanariasdialog import IDECanariasDialog
 import os.path
 
+#
+from idecanariasdock import IDECanariasDock
 
 class IDECanarias:
 
@@ -50,6 +52,11 @@ class IDECanarias:
 
         # Create the dialog (after translation) and keep reference
         self.dlg = IDECanariasDialog()
+
+        # TODO: 140514, install dock
+        self.dock = Ui_IDECanariasDock(self.iface)
+        self.iface.addDockWidget(Qt.BottomDockWidgetArea, self.dock)
+
 
     def initGui(self):
         # Create action that will start plugin configuration

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_idecanarias.ui'
 #
-# Created: Wed May 14 14:06:43 2014
+# Created: Wed May 14 15:06:25 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
