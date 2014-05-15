@@ -15,6 +15,7 @@ description=The plugin allows you to search all locations of Canary Islands
 version=2.1
 author=Félix José Hernández
 email=fhernandeze@grafcan.es
+about=The plugin allows you to search all locations of Canary Islands
 
 # end of mandatory metadata
 
@@ -24,11 +25,11 @@ email=fhernandeze@grafcan.es
 # changelog=
 
 # tags are comma separated with spaces allowed
-tags=
+tags=search, ide, canaray islands, canary, spain
 
-homepage=
-tracker=
-repository=
+homepage=http://www.idecan.grafcan.es/idecan/es/portal/descargas.html
+tracker=https://github.com/fherdom/IDECanarias/issues
+repository=https://github.com/fherdom/IDECanarias
 icon=icon.png
 # experimental flag
 experimental=False
