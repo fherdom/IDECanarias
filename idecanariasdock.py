@@ -3,8 +3,8 @@
 /***************************************************************************
 Name : IDECANARIAS Search
 Description          : Perform querys in toponimia
-Date                 : 19/Aug/11 
-copyright            : (C) 2011 by Felix J. Hdez
+Date                 : 15/May/14 
+copyright            : (C) 2014 by Felix J. Hdez
 email                : fhernandeze@grafcan.es 
  ***************************************************************************/
 
@@ -29,9 +29,7 @@ import math
 from datetime import datetime
 
 from PyQt4 import QtCore, QtGui, QtXml
-from PyQt4.QtCore import Qt, SIGNAL
-from PyQt4.QtGui import *
-from PyQt4.QtCore import * 
+from PyQt4.QtCore import Qt, SIGNAL, QUrl
 from PyQt4.QtNetwork import QHttp
 
 from qgis.core import *
@@ -39,9 +37,8 @@ import qgis.utils
 
 from ui_idecanariasdock import Ui_IDECanariasDock
 
-from Utils import *
+from utils import *
 
-#class IDESearchDialog(QtGui.QDialog):
 class IDECanariasDock(QtGui.QDockWidget):
     """
     """
@@ -54,7 +51,7 @@ class IDECanariasDock(QtGui.QDockWidget):
         QtGui.QDialog.__init__(self) 
         
         # Set up the user interface from Designer. 
-        self.ui = Ui_IDESearch()
+        self.ui = Ui_IDECanariasDock()
         self.ui.setupUi(self)
         self.http = QHttp()
         self.httpogr = QHttp()
@@ -71,7 +68,9 @@ class IDECanariasDock(QtGui.QDockWidget):
         self.chkRemote = False
         self.chkBBOX = False
         
-        self.tblResultHeader = [QString.fromUtf8('Nombre'), QString.fromUtf8('Clasificación'), QString.fromUtf8('Localización')]
+        #self.tblResultHeader = [QString.fromUtf8('Nombre'), QString.fromUtf8('Clasificación'), QString.fromUtf8('Localización')]
+        self.tblResultHeader = [u'Nombre', u'Clasificación', u'Localización']
+
         self.ui.tblResult.setHorizontalHeaderLabels(self.tblResultHeader)
         
         #self.connect(self.ui.btnSearch, SIGNAL("clicked()"),                    self.onClick_btnSearch)
@@ -88,8 +87,7 @@ class IDECanariasDock(QtGui.QDockWidget):
         self.connect(self.ui.btnGo, SIGNAL("clicked()"),                        self.onClick_btnGo)
         self.connect(self.ui.txtCoordinates, SIGNAL("returnPressed(void)"),     self.onClick_btnGo)
         self.connect(self.ui.btnClipboard, SIGNAL("clicked()"),                 self.onClick_btnClipboard)
-        
-        self.connect(self.ui.btnLoad, SIGNAL("clicked()"),                      self.onClick_btnLoad)
+        #self.connect(self.ui.btnLoad, SIGNAL("clicked()"),                      self.onClick_btnLoad)
         
         baseDirectory = os.path.dirname(__file__)
         fillPath = lambda x: os.path.join(baseDirectory, x)
@@ -110,13 +108,13 @@ class IDECanariasDock(QtGui.QDockWidget):
         """
         if self.DEBUG:
             f = open(self.filenamelog, "a")
-            f.write("%s: %s\n" % (datetime.now(), msg))
+            f.write("%s: %s\n" % (datetime.now(), msg.encode('utf-8')))
             f.close()
         
     def alert(self, msg):
         """
         """
-        QtGui.QMessageBox.warning(self, QString.fromUtf8("Búsquedas IDECANARIAS"), msg)
+        QtGui.QMessageBox.warning(self, u'Búsquedas IDECANARIAS', msg)
         
     def __setRadiodms(self, checked):
         """
@@ -157,7 +155,7 @@ class IDECanariasDock(QtGui.QDockWidget):
         rowscount = len(rows)
         
         if rowscount == 0:
-            QMessageBox.warning(self, "Aviso", QString.fromUtf8("Debe seleccionar algún elemento"))
+            QMessageBox.warning(self, "Aviso", 'Debe seleccionar algún elemento')
             return False
         
         if rowscount == 1:
@@ -222,7 +220,6 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         newextent = coodTrans.transform(extent)
         self.canvas.setExtent(newextent)
         self.canvas.refresh()
-        
 
     def onClick_chkRemote(self):
         """
@@ -234,7 +231,7 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
     def onClick_btnClipboard(self):
         """
         """
-        clipboard = QApplication.clipboard()
+        clipboard = QtGui.QApplication.clipboard()
         clipboard.setText(self.ui.txtCoordinates.text()) 
 
     def onClick_btnGet(self):
@@ -261,12 +258,13 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         x = None
         y = None
         
-        texto = self.ui.txtCoordinates.text().toUtf8()
+        texto = self.ui.txtCoordinates.text().encode('utf-8')
         if not texto:
             texto = "28º 07' 9.7249'' N, 15º 25' 30.9814'' O"
+            texto = "28º 07' 9.7248'' N, 15º 25' 30.9822'' O"
         
         patterndms = r"^([\d]{1,3})\º ([\d]{1,3})\' ([\d]{1,3}(\.\d+)?)\'\' ([NS]),\s*([\d]{1,3})\º ([\d]{1,3})\' ([\d]{1,3}(\.\d+)?)\'\' ([EO])$"
-        m = re.match(patterndms, texto)    
+        m = re.match(patterndms, texto, re.UNICODE)    
         if m:
             lat = int(m.group(1)) + (float(m.group(2)) / 60) + (float(m.group(3)) / 3600)
             lng = int(m.group(6)) + (float(m.group(7)) / 60) + (float(m.group(8)) / 3600)
@@ -277,7 +275,7 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
             self.ui.radiodms.setChecked(True)
 
         patterndm = r"^([\d]{1,3})\º ([\d]{1,3}(\.\d+)?)\' ([NS]),\s*([\d]{1,3})\º ([\d]{1,3}(\.\d+)?)\' ([EO])$"
-        m = re.match(patterndm, texto)
+        m = re.match(patterndm, texto, re.UNICODE)
         if m:
             lat = int(m.group(1)) + (float(m.group(2)) / 60) 
             lng = int(m.group(5)) + (float(m.group(6)) / 60)
@@ -286,15 +284,16 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
             if m.group(8) == "O":
                 lng = -lng
             self.ui.radiodm.setChecked(True) 
-            
-        m = re.match(r"^(\-?[\d]{1,3}(\.\d+)?),\s*(\-?[\d]{1,3}(\.\d+)?)$", texto)
+
+        patterndm = r"^(\-?[\d]{1,3}(\.\d+)?),\s*(\-?[\d]{1,3}(\.\d+)?)$"           
+        m = re.match(patterndm, texto, re.UNICODE)
         if m:
             lat = float(m.group(1))
             lng = float(m.group(3))
             self.ui.radiod.setChecked(True)
             
         # convert to UTM
-        self.Log("%s, %s (%s)" % (lat, lng, texto))
+        self.Log("%s, %s (%s)" % (lat, lng, type(texto)))
         
         if lat and lng:
             point = QgsPoint(lng, lat)
@@ -311,31 +310,23 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
             self._point = pointToWGS84(self._pointutm)
             self.ui.radioutm.setChecked(True)
 
-        # reverse lat/lon
-        # Use pdb for debugging
-        #import pdb
-        ## These lines allow you to set a breakpoint in the app
-        #pyqtRemoveInputHook()
-        #pdb.set_trace()
-        #qDebug('Reversing point %s %s' % (x, y))
         if x and y:
 
-                    
             # create layer
             if not QgsMapLayerRegistry.instance().mapLayer(self.layerid):
-                self.layer = QgsVectorLayer("Point", QString.fromUtf8("Resultados de conversión"), "memory")
+                self.layer = QgsVectorLayer("Point", u'Resultados de conversión', "memory")
                 self.provider = self.layer.dataProvider()
                 self.layer.setCrs(get_dest_projection())
 
                 # add fields
                 self.provider.addAttributes( [
-                    QgsField("nombre", QVariant.String),
-                    QgsField("x", QVariant.Double),
-                    QgsField("y", QVariant.Double),
+                    QgsField("nombre", QtCore.QVariant.String),
+                    QgsField("x", QtCore.QVariant.Double),
+                    QgsField("y", QtCore.QVariant.Double),
                 ] )
             
                 # Makes fields visible
-                self.layer.updateFieldMap()
+                self.layer.updateFields()
             
                 # Labels on
                 label = self.layer.label()
@@ -350,16 +341,15 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
                 self.canvas.refresh()
                 
             text = ""
-            text, ok = QInputDialog.getText(self, QString.fromUtf8('IDECanarias'), QString.fromUtf8('Introduzca una descripción:'))
+            text, ok = QtGui.QInputDialog.getText(self, u'IDECanarias', u'Introduzca una descripción:')
             
             # add a feature
-            fet = QgsFeature()
+            fields = self.layer.pendingFields()
+            fet = QgsFeature(fields)
             fet.setGeometry(QgsGeometry.fromPoint(self._pointutm))
-            fet.setAttributeMap( {
-                    0 : QVariant(str(text)),
-                    1 : QVariant(self._pointutm[0]),
-                    2 : QVariant(self._pointutm[1]),
-                } )
+            fet[0] = text
+            fet[1] = self._pointutm[0]
+            fet[2] = self._pointutm[1]
             self.provider.addFeatures([fet])
     
             # update layer's extent when new features have been added
@@ -373,11 +363,10 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
             height = extent.height() * scale
             
             # Recenter
-            rect = QgsRectangle(  \
-                            x - width/2.0 \
-                            , y - height/2.0 \
-                            , x + width/2.0 \
-                            , y + height/2.0)
+            rect = QgsRectangle(x - width/2.0, 
+                y - height/2.0, 
+                x + width/2.0, 
+                y + height/2.0)
     
             # Set the extent to our new rectangle
             self.canvas.setExtent(rect)
@@ -414,7 +403,6 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         latitude_deg = math.floor(math.fabs(latitude))
         latitude_min = math.floor((math.fabs(latitude) - latitude_deg) * 60)
         latitude_min_ = (math.fabs(latitude) - latitude_deg) * 60
-        #latitude_sec = math.ceil(((math.fabs(latitude) - latitude_deg) * 60 - latitude_min) * 60)
         latitude_sec = ((math.fabs(latitude) - latitude_deg) * 60 - latitude_min) * 60
         
         latitude_dir = "S"
@@ -424,7 +412,6 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         longitude_deg = math.floor(math.fabs(longitude))
         longitude_min = math.floor((math.fabs(longitude) - longitude_deg) * 60)
         longitude_min_ = (math.fabs(longitude) - longitude_deg) * 60
-        #longitude_sec = math.ceil(((math.fabs(longitude) - longitude_deg) * 60 - longitude_min) * 60)
         longitude_sec = ((math.fabs(longitude) - longitude_deg) * 60 - longitude_min) * 60
         
         longitude_dir = "O"
@@ -433,17 +420,16 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         
         data = ""
         if self._radio == 0:
-            data = "%02.0fº %02.0f\' %06.4f\'\' %s, %02.0fº %02.0f\' %06.4f\'\' %s" % (latitude_deg, latitude_min, latitude_sec, latitude_dir, longitude_deg, longitude_min, longitude_sec, longitude_dir) 
+            data = u"%02.0fº %02.0f\' %06.4f\'\' %s, %02.0fº %02.0f\' %06.4f\'\' %s" % (latitude_deg, latitude_min, latitude_sec, latitude_dir, longitude_deg, longitude_min, longitude_sec, longitude_dir) 
         elif self._radio == 1:
-            data = "%02.0fº %08.5f\' %s, %02.0fº %08.5f\' %s" % (latitude_deg, latitude_min_, latitude_dir, longitude_deg, longitude_min_, longitude_dir)
+            data = u"%02.0fº %08.5f\' %s, %02.0fº %08.5f\' %s" % (latitude_deg, latitude_min_, latitude_dir, longitude_deg, longitude_min_, longitude_dir)
         elif self._radio == 2:
-            data = "%.8f, %.8f" % (latitude, longitude)            
+            data = u"%.8f, %.8f" % (latitude, longitude)            
         elif self._radio == 3:
-            #data = "%s; %s" % ('{0:,.2f}'.format(self._point[0]), '{0:,.2f}'.format(self._point[1]))
-            data = "%s, %s" % ('{0:.2f}'.format(self._pointutm[0]), '{0:.2f}'.format(self._pointutm[1]))
+            data = u"%s, %s" % ('{0:.2f}'.format(self._pointutm[0]), '{0:.2f}'.format(self._pointutm[1]))
         else:
             data = "" 
-        self.ui.txtCoordinates.setText(QString.fromUtf8(data))
+        self.ui.txtCoordinates.setText(data)
      
     def onClick_btnSearch(self):
         """
@@ -482,7 +468,7 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
                             x double precision, y double precision, imagen character varying(64), 
                             codigo character varying(10), total bigint)""" % (texto, float(bbox[0]), float(bbox[1]), float(bbox[2]), float(bbox[3]))
                 cursor.execute(sql)
-                self.ui.lblResult.setText(self.tr("%1 lugar(es) encontrados").arg(cursor.rowcount) + QString.fromUtf8(" (Haz doble click para ver su localización)"))
+                self.ui.lblResult.setText(self.tr("%1 lugar(es) encontrados").arg(cursor.rowcount) + ' (Haz doble click para ver su localización)')
                 self.lid = []
                 lidd = []
                 self.ui.tblResult.clear()
@@ -493,9 +479,9 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
                     self.lid.append(record)
                     row = self.ui.tblResult.rowCount()
                     self.ui.tblResult.insertRow(row)
-                    item001 = QTableWidgetItem(record[3])
-                    item002 = QTableWidgetItem(record[2])
-                    item003 = QTableWidgetItem(record[1])
+                    item001 = QtGui.QTableWidgetItem(record[3])
+                    item002 = QtGui.QTableWidgetItem(record[2])
+                    item003 = QtGui.QTableWidgetItem(record[1])
                     self.ui.tblResult.setItem(row, 0, item001)
                     self.ui.tblResult.setItem(row, 1, item002)
                     self.ui.tblResult.setItem(row, 2, item003)
@@ -609,15 +595,15 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         
         id = None
         nombre = None        
-        if self.i <> None:
+        if None != self.i:
             id = self.lid[self.i][0]
             nombre = self.lid[self.i][3]
             
             # show in qgis
             basename = os.path.basename(filename)
             self.iface.addVectorLayer(filename, "%s_%s" % (nombre, id), 'ogr')
-            src = self.canvas.layers()[0].srs()
-            dest = self.canvas.mapRenderer().destinationSrs()
+            src = self.canvas.layers()[0].crs()
+            dest = self.canvas.mapRenderer().destinationCrs()
             coodTrans = QgsCoordinateTransform(src, dest)
             extent = self.canvas.layers()[0].extent()
             newextent = coodTrans.transform(extent)
@@ -684,34 +670,27 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
                         except:
                             QMessageBox.warning(self, "Error", "Could not parse xml file. Problem parsing %s." % (child2.toElement().tagName()))                                                
                     child = child.nextSibling()
-                """
-                e = {'id': id,
-                         'nombre':  nombre,
-                         'clasificacion': clasificacion,
-                         'localizacion': localizacion
-                         }
-                """
-                e = (id.toUtf8().data(), localizacion.toUtf8().data(), clasificacion.toUtf8().data(), nombre.toUtf8().data(), nombre.toUtf8().data(), 0.0, x.toFloat()[0], y.toFloat()[0])
-                #lidd.append(e["nombre"])
+                e = (id, localizacion, clasificacion, nombre, nombre, 0.0, x[0], y[0])
                 lidd.append("%s - %s [%s]" % (clasificacion, localizacion, nombre))
-                
+
             self.lid.append(e)
             row = self.ui.tblResult.rowCount()
             self.ui.tblResult.insertRow(row)
-            item001 = QTableWidgetItem(nombre)
-            item002 = QTableWidgetItem(clasificacion)
-            item003 = QTableWidgetItem(localizacion)
+            item001 = QtGui.QTableWidgetItem(nombre)
+            item002 = QtGui.QTableWidgetItem(clasificacion)
+            item003 = QtGui.QTableWidgetItem(localizacion)
             self.ui.tblResult.setItem(row, 0, item001)
             self.ui.tblResult.setItem(row, 1, item002)
             self.ui.tblResult.setItem(row, 2, item003)
             node = node.nextSibling()
         
-        self.ui.lblResult.setText(self.tr("%1 lugar(es) encontrados").arg(len(self.lid)) + QString.fromUtf8(" (Haz doble click para ver su localización)"))
+        self.ui.lblResult.setText(self.tr(u'%d lugar(es) encontrados (Haz doble click para ver su localización)' % len(self.lid)))
         self.ui.tblResult.resizeColumnsToContents()
     
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
     app = QtGui.QApplication(sys.argv)
-    dialog = IDESearchDock()
+    dialog = IDECanariasDock()
     app.addDockWidget(dialog)
     dialog.show()
+    sys.exit(app.exec_())

@@ -34,3 +34,13 @@ class IDECanariasDialog(QtGui.QDialog, Ui_IDECanarias):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+
+if __name__ == '__main__':
+    import sys
+ 
+    app = QtGui.QApplication(sys.argv)
+ 
+    helloPythonWidget = IDECanariasDialog()
+    helloPythonWidget.show()
+ 
+    sys.exit(app.exec_())

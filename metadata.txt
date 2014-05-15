@@ -11,9 +11,9 @@
 [general]
 name=IDECanarias
 qgisMinimumVersion=2.0
-description=Perform querys in local toponimia
+description=The plugin allows you to search all locations of Canary Islands
 version=2.1
-author=Felix Jose Hernandez
+author=Félix José Hernández
 email=fhernandeze@grafcan.es
 
 # end of mandatory metadata
