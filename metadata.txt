@@ -15,7 +15,7 @@ description=The plugin allows you to search all locations of Canary Islands
 version=2.1
 author=Félix José Hernández
 email=fhernandeze@grafcan.es
-about=The plugin allows you to search all locations of Canary Islands
+about=The plugin allows you to search all locations of Canary Islands, Spain
 
 # end of mandatory metadata
 
