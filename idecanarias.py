@@ -79,6 +79,10 @@ class IDECanarias:
     def run(self):
         # show the dialog
         self.dlg.show()
+
+        #
+        self.dlg.move(100, 100)
+
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
