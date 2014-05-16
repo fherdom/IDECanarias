@@ -24,7 +24,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 #from qgis.core import *
 # Initialize Qt resources from file resources.py
-#import resources_rc
+import resources_rc
 # Import the code for the dialog
 from idecanariasdialog import IDECanariasDialog
 import os.path
@@ -51,7 +51,7 @@ class IDECanarias:
                 QtCore.QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
-        self.dlg = IDECanariasDialog()
+        self.dlg = IDECanariasDialog(self.iface)
 
         # TODO: 140514, install dock
         self.dock = IDECanariasDock(self.iface)
@@ -67,8 +67,8 @@ class IDECanarias:
         self.action.triggered.connect(self.run)
 
         # Add toolbar button and menu item
-        #self.iface.addToolBarIcon(self.action)
-        #self.iface.addPluginToMenu(u"&IDECanarias", self.action)
+        self.iface.addToolBarIcon(self.action)
+        self.iface.addPluginToMenu(u"&IDECanarias", self.action)
 
     def unload(self):
         # Remove the plugin menu item and icon
