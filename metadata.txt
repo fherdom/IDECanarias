@@ -2,6 +2,7 @@
 # with version 1.8 this is the preferred way to supply information about a
 # plugin. The current method of embedding metadata in __init__.py will
 # be supported until version 2.0
+# zip -r IDECanarias-2.3.zip IDECanarias/*.py IDECanarias/*.qpt IDECanarias/*.qrc IDECanarias/*.ui IDECanarias/*.jpg IDECanarias/icon.png IDECanarias/metadata.txt IDECanarias/README.html
 
 # This file should be included when you package your plugin.
 
@@ -12,7 +13,7 @@
 name=IDECanarias
 qgisMinimumVersion=2.0
 description=The plugin allows you to search all locations of Canary Islands
-version=2.2
+version=2.3
 author=Félix José Hernández
 email=fhernandeze@grafcan.es
 about=The plugin allows you to search all locations of Canary Islands, Spain
@@ -22,7 +23,7 @@ about=The plugin allows you to search all locations of Canary Islands, Spain
 # Optional items:
 
 # Uncomment the following line and add your changelog entries:
-changelog=add button in toolbar and new dialog
+changelog=fix error load toponimo (layers)
 
 # tags are comma separated with spaces allowed
 tags=search, ide, canaray islands, canary, spain

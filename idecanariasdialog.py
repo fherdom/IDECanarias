@@ -210,12 +210,13 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
         if not texto:
             texto = "consulta"
 
+            
         basename = os.path.basename(filename)
-        self.iface.addVectorLayer(filename, "%s" % (texto), 'ogr')
-        src = self.canvas.layers()[0].srs()
+        layerid = self.iface.addVectorLayer(filename, "%s" % (texto), 'ogr')
+        src = layerid.srs()
         dest = self.canvas.mapRenderer().destinationSrs()
         coodTrans = QgsCoordinateTransform(src, dest)
-        extent = self.canvas.layers()[0].extent()
+        extent = layerid.extent()
         newextent = coodTrans.transform(extent)
         self.canvas.setExtent(newextent)
         self.canvas.refresh()
@@ -558,11 +559,11 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
                 
                 # show in qgis
                 basename = os.path.basename(filename)
-                self.iface.addVectorLayer(filename, "%s_%d" % (nombre, id), 'ogr')
-                src = self.canvas.layers()[0].srs()
+                layerid = self.iface.addVectorLayer(filename, "%s_%d" % (nombre, id), 'ogr')
+                src = layerid.srs()
                 dest = self.canvas.mapRenderer().destinationSrs()
                 coodTrans = QgsCoordinateTransform(src, dest)
-                extent = self.canvas.layers()[0].extent()
+                extent = layerid.extent()
                 newextent = coodTrans.transform(extent)
                 self.canvas.setExtent(newextent)
                 self.canvas.refresh()
@@ -600,15 +601,18 @@ xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.
             
             # show in qgis
             basename = os.path.basename(filename)
-            self.iface.addVectorLayer(filename, "%s_%s" % (nombre, id), 'ogr')
-            src = self.canvas.layers()[0].crs()
+            layerid = self.iface.addVectorLayer(filename, "%s_%s" % (nombre, id), 'ogr')
+            #src = QgsCoordinateReferenceSystem()
+            #src.createFromSrid(32628)
+            #src = self.canvas.layers()[0].crs()
+            src = layerid.crs()
             dest = self.canvas.mapRenderer().destinationCrs()
             coodTrans = QgsCoordinateTransform(src, dest)
-            extent = self.canvas.layers()[0].extent()
+            #extent = self.canvas.layers()[0].extent()
+            extent = layerid.extent()
             newextent = coodTrans.transform(extent)
             self.canvas.setExtent(newextent)
             self.canvas.refresh()
-                
         
     def onDone_http(self, error):
         """
