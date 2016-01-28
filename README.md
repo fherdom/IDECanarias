@@ -14,5 +14,4 @@
 
 ## Features
 
- * Simple web component
  * Search function
