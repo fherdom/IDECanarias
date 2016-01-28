@@ -6,6 +6,12 @@
 
 ###IDECanarias QGIS plugin
 
+## Install
+
+ * From official repositoty [IDECanarias](http://plugins.qgis.org/plugins/IDECanarias/) 
+ * Copy files to `home/felix/.qgis2/python/plugins` or `/home/felix/dev/qgis/IDECanarias` (change felix by your username)
+
+
 ## Features
 
  * Simple web component
