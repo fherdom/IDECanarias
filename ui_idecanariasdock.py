@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui_idecanariasdock.ui'
 #
-# Created: Wed May 14 15:09:12 2014
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Mon Mar 13 10:22:15 2017
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_IDECanariasDock(object):
     def setupUi(self, Dialog):
@@ -130,16 +139,16 @@ class Ui_IDECanariasDock(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("IDECanariasDock", "Búsquedas IDECanarias", None, QtGui.QApplication.UnicodeUTF8))
-        self.chkBBOX.setText(QtGui.QApplication.translate("IDECanariasDock", "Limitar la búsqueda a la extensión actual", None, QtGui.QApplication.UnicodeUTF8))
-        self.lblResult.setText(QtGui.QApplication.translate("IDECanariasDock", "Encontrado (s)", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab001), QtGui.QApplication.translate("IDECanariasDock", "Lugar", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioutm.setText(QtGui.QApplication.translate("IDECanariasDock", "UTM", None, QtGui.QApplication.UnicodeUTF8))
-        self.radiodms.setText(QtGui.QApplication.translate("IDECanariasDock", "Grad. Min. Seg.", None, QtGui.QApplication.UnicodeUTF8))
-        self.radiodm.setText(QtGui.QApplication.translate("IDECanariasDock", "Grad. Min.", None, QtGui.QApplication.UnicodeUTF8))
-        self.radiod.setText(QtGui.QApplication.translate("IDECanariasDock", "Grados", None, QtGui.QApplication.UnicodeUTF8))
-        self.btnGet.setText(QtGui.QApplication.translate("IDECanariasDock", "Empezar captura", None, QtGui.QApplication.UnicodeUTF8))
-        self.btnClipboard.setText(QtGui.QApplication.translate("IDECanariasDock", "Copiar al portapapeles", None, QtGui.QApplication.UnicodeUTF8))
-        self.btnGo.setText(QtGui.QApplication.translate("IDECanariasDock", "Ir", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab002), QtGui.QApplication.translate("IDECanariasDock", "Coordenadas", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(_translate("IDECanariasDock", "Búsquedas IDECanarias", None))
+        self.chkBBOX.setText(_translate("IDECanariasDock", "Limitar la búsqueda a la extensión actual", None))
+        self.lblResult.setText(_translate("IDECanariasDock", "Encontrado (s)", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab001), _translate("IDECanariasDock", "Lugar", None))
+        self.radioutm.setText(_translate("IDECanariasDock", "UTM", None))
+        self.radiodms.setText(_translate("IDECanariasDock", "Grad. Min. Seg.", None))
+        self.radiodm.setText(_translate("IDECanariasDock", "Grad. Min.", None))
+        self.radiod.setText(_translate("IDECanariasDock", "Grados", None))
+        self.btnGet.setText(_translate("IDECanariasDock", "Empezar captura", None))
+        self.btnClipboard.setText(_translate("IDECanariasDock", "Copiar al portapapeles", None))
+        self.btnGo.setText(_translate("IDECanariasDock", "Ir", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab002), _translate("IDECanariasDock", "Coordenadas", None))
 

@@ -15,3 +15,7 @@
 ## Features
 
  * Search function
+
+## Updates
+
+ * 170313: enable local database access, file .database in plugin folder

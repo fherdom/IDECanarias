@@ -20,25 +20,28 @@ email                : info@itopen.it
 from qgis.core import *
 from qgis.gui import *
 
+
 class ClickTool(QgsMapTool):
-    def __init__(self,iface, callback):
-        QgsMapTool.__init__(self,iface.mapCanvas())
-        self.iface      = iface
-        self.callback   = callback
-        self.canvas     = iface.mapCanvas()
+
+    def __init__(self, iface, callback):
+        QgsMapTool.__init__(self, iface.mapCanvas())
+        self.iface = iface
+        self.callback = callback
+        self.canvas = iface.mapCanvas()
         return None
 
-
-    def canvasReleaseEvent(self,e):
-        point = self.canvas.getCoordinateTransform().toMapPoint(e.pos().x(),e.pos().y())
+    def canvasReleaseEvent(self, e):
+        point = self.canvas.getCoordinateTransform().toMapPoint(
+            e.pos().x(), e.pos().y()
+        )
         self.callback(point)
         return None
+
 
 def get_dest_projection():
     """
     Returns project projection
     """
-    
     """
     p = QgsProject.instance()
     (proj4string,ok) = p.readEntry("SpatialRefSys","ProjectCRSProj4String")
@@ -47,23 +50,23 @@ def get_dest_projection():
     crs = QgsCoordinateReferenceSystem()
     crs.createFromProj4(proj4string)
     """
-    
     # TODO: CHANGE
     crs = QgsCoordinateReferenceSystem()
-    #crs.createFromProj4('+proj=utm +zone=28 +datum=WGS84 +units=m +no_defs')
+    # crs.createFromProj4('+proj=utm +zone=28 +datum=WGS84 +units=m +no_defs')
     crs.createFromSrid(32628)
     return crs
 
 
 def pointToWGS84(point):
-    t=QgsCoordinateReferenceSystem()
+    t = QgsCoordinateReferenceSystem()
     t.createFromSrid(4326)
     transformer = QgsCoordinateTransform(get_dest_projection(), t)
     pt = transformer.transform(point)
-    return pt 
+    return pt
+
 
 def pointFromWGS84(point):
-    f=QgsCoordinateReferenceSystem()
+    f = QgsCoordinateReferenceSystem()
     f.createFromSrid(4326)
     transformer = QgsCoordinateTransform(f, get_dest_projection())
     pt = transformer.transform(point)
@@ -72,4 +75,3 @@ def pointFromWGS84(point):
 
 if __name__ == "__main__":
     pass
-

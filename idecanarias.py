@@ -22,27 +22,21 @@
 # Import the PyQt and QGIS libraries
 from PyQt4 import QtCore
 from PyQt4 import QtGui
-#from qgis.core import *
-# Initialize Qt resources from file resources.py
-import resources_rc
-# Import the code for the dialog
-from idecanariasdialog import IDECanariasDialog
+# import resources_rc
 import os.path
 
-# TODO: 140515, dock
 from idecanariasdock import IDECanariasDock
+
 
 class IDECanarias:
 
     def __init__(self, iface):
-        # Save reference to the QGIS interface
         self.iface = iface
-        # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
-        # initialize locale
         locale = QtCore.QSettings().value("locale/userLocale")[0:2]
-        localePath = os.path.join(self.plugin_dir, 'i18n', 'idecanarias_{}.qm'.format(locale))
-
+        localePath = os.path.join(
+            self.plugin_dir, 'i18n', 'idecanarias_{}.qm'.format(locale)
+        )
         if os.path.exists(localePath):
             self.translator = QtGui.QTranslator()
             self.translator.load(localePath)
@@ -50,43 +44,15 @@ class IDECanarias:
             if QtCore.qVersion() > '4.3.3':
                 QtCore.QCoreApplication.installTranslator(self.translator)
 
-        # Create the dialog (after translation) and keep reference
-        self.dlg = IDECanariasDialog(self.iface)
-
         # TODO: 140514, install dock
         self.dock = IDECanariasDock(self.iface)
         self.iface.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.dock)
 
-
     def initGui(self):
-        # Create action that will start plugin configuration
-        self.action = QtGui.QAction(
-            QtGui.QIcon(":/plugins/idecanarias/icon.png"),
-            u"IDECanarias", self.iface.mainWindow())
-        # connect the action to the run method
-        self.action.triggered.connect(self.run)
-
-        # Add toolbar button and menu item
-        self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(u"&IDECanarias", self.action)
+        pass
 
     def unload(self):
-        # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(u"&IDECanarias", self.action)
-        self.iface.removeToolBarIcon(self.action)
+        pass
 
-    # run method that performs all the real work
     def run(self):
-        # show the dialog
-        self.dlg.show()
-
-        #
-        self.dlg.move(100, 100)
-
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result == 1:
-            # do something useful (delete the line containing pass and
-            # substitute with your code)
-            pass
+        pass

@@ -25,7 +25,7 @@ QGISDIR=.qgis2
 # Makefile for a PyQGIS plugin
 
 # translation
-SOURCES = idecanarias.py ui_idecanarias.py __init__.py idecanariasdialog.py
+SOURCES = idecanarias.py ui_idecanariasdock.py __init__.py idecanariasdock.py utils.py
 #TRANSLATIONS = i18n/idecanarias_en.ts
 TRANSLATIONS =
 
@@ -33,11 +33,11 @@ TRANSLATIONS =
 
 PLUGINNAME = idecanarias
 
-PY_FILES = idecanarias.py idecanariasdialog.py __init__.py
+PY_FILES = idecanarias.py idecanariasdock.py __init__.py utils.py
 
-EXTRAS = icon.png metadata.txt
+EXTRAS = icon.png metadata.txt .database
 
-UI_FILES = ui_idecanarias.py
+UI_FILES = ui_idecanariasdock.py
 
 RESOURCE_FILES = resources_rc.py
 
@@ -59,7 +59,9 @@ compile: $(UI_FILES) $(RESOURCE_FILES)
 # The deploy  target only works on unix like operating system where
 # the Python plugin directory is located at:
 # $HOME/$(QGISDIR)/python/plugins
-deploy: compile doc transcompile
+
+# deploy: compile doc transcompile
+deploy: compile
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	cp -vf $(PY_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	cp -vf $(UI_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
