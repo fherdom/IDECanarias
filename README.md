@@ -4,7 +4,7 @@
 <!--_[Demo and API Docs](https://elements.polymer-project.org/elements/paper-input)_-->
 
 
-###IDECanarias QGIS plugin
+### IDECanarias QGIS plugin
 
 ## Install
 
